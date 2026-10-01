@@ -1,0 +1,9 @@
+{
+	"id": "remove-tabs",
+	"name": "Remove Tabs",
+	"version": "1.0.0",
+	"minAppVersion": "1.5.0",
+	"description": "Removes tabs and the tab bar. Whatever you open replaces what's currently open, so there is only ever one tab.",
+	"author": "kv",
+	"isDesktopOnly": false
+}

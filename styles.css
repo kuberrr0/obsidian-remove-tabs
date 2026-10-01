@@ -1,0 +1,91 @@
+/*
+ * Remove Tabs — hide the tab bar in the main area and in popout windows.
+ *
+ * Obsidian parks the sidebar toggle buttons inside the main-area tab bar when a
+ * sidebar is collapsed, and on macOS the tab bar is also the window drag region
+ * and reserves space for the traffic lights. So instead of `display: none`, the
+ * header container is dissolved with `display: contents`: everything in it is
+ * hidden except the sidebar toggles, which float over the note's view header.
+ */
+
+.workspace-split.mod-root .workspace-tabs,
+.is-popout-window .workspace-tabs {
+	--rt-left: 0px;
+	--rt-right: 0px;
+	--rt-toggle-width: 36px;
+}
+
+.is-hidden-frameless:not(.is-fullscreen) .workspace-split.mod-root .workspace-tabs.mod-top-left-space,
+.is-hidden-frameless:not(.is-fullscreen).is-popout-window .workspace-tabs.mod-top-left-space {
+	--rt-left: var(--frame-left-space);
+}
+
+.is-hidden-frameless:not(.is-fullscreen) .workspace-split.mod-root .workspace-tabs.mod-top-right-space,
+.is-hidden-frameless:not(.is-fullscreen).is-popout-window .workspace-tabs.mod-top-right-space {
+	--rt-right: var(--frame-right-space);
+}
+
+/* The tab bar itself */
+.workspace-split.mod-root .workspace-tabs > .workspace-tab-header-container,
+.is-popout-window .workspace-tabs > .workspace-tab-header-container {
+	display: contents;
+}
+
+.workspace-split.mod-root .workspace-tabs > .workspace-tab-header-container > :not(.sidebar-toggle-button),
+.is-popout-window .workspace-tabs > .workspace-tab-header-container > :not(.sidebar-toggle-button),
+.workspace-split.mod-root .workspace-tabs > .workspace-tab-header-container::before,
+.workspace-split.mod-root .workspace-tabs > .workspace-tab-header-container::after,
+.is-popout-window .workspace-tabs > .workspace-tab-header-container::before,
+.is-popout-window .workspace-tabs > .workspace-tab-header-container::after {
+	display: none !important;
+}
+
+/* Sidebar toggles, when Obsidian has moved them into the main area */
+.workspace-split.mod-root .workspace-tabs > .workspace-tab-header-container > .sidebar-toggle-button {
+	position: absolute;
+	top: 0;
+	z-index: var(--layer-sidedock);
+	width: var(--rt-toggle-width);
+	background-color: transparent;
+}
+
+.workspace-split.mod-root .workspace-tabs > .workspace-tab-header-container > .sidebar-toggle-button.mod-left {
+	left: var(--rt-left);
+}
+
+.workspace-split.mod-root .workspace-tabs > .workspace-tab-header-container > .sidebar-toggle-button.mod-right {
+	right: var(--rt-right);
+}
+
+/* Make room in the view header for traffic lights / window controls / toggles */
+.workspace-split.mod-root .workspace-tabs .workspace-leaf-content > .view-header,
+.is-popout-window .workspace-tabs .workspace-leaf-content > .view-header {
+	padding-left: calc(var(--size-4-3) + var(--rt-left));
+	padding-right: calc(var(--size-4-3) + var(--rt-right));
+}
+
+.workspace-split.mod-root .workspace-tabs:has(> .workspace-tab-header-container > .sidebar-toggle-button.mod-left) .workspace-leaf-content > .view-header {
+	padding-left: calc(var(--size-4-3) + var(--rt-left) + var(--rt-toggle-width));
+}
+
+.workspace-split.mod-root .workspace-tabs:has(> .workspace-tab-header-container > .sidebar-toggle-button.mod-right) .workspace-leaf-content > .view-header {
+	padding-right: calc(var(--size-4-3) + var(--rt-right) + var(--rt-toggle-width));
+}
+
+/*
+ * With the tab bar gone, the empty middle of the top view header becomes the
+ * window drag region. Only the title container is made draggable: the sidebar
+ * toggles float over the header's padding, and a drag region under them would
+ * swallow their clicks (drag regions beat no-drag elements earlier in the DOM).
+ */
+.is-hidden-frameless:not(.is-fullscreen) .workspace-split.mod-root .workspace-tabs.mod-top .workspace-leaf-content > .view-header > .view-header-title-container,
+.is-hidden-frameless:not(.is-fullscreen).is-popout-window .workspace-tabs.mod-top .workspace-leaf-content > .view-header > .view-header-title-container {
+	-webkit-app-region: drag;
+}
+
+.is-hidden-frameless .view-header-title-container .view-header-title,
+.is-hidden-frameless .view-header-title-container .view-header-title-parent,
+.is-hidden-frameless .view-header-title-container .view-header-breadcrumb,
+.is-hidden-frameless .view-header-title-container .clickable-icon {
+	-webkit-app-region: no-drag;
+}
