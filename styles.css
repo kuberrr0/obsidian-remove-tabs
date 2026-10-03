@@ -57,6 +57,16 @@
 	right: var(--rt-right);
 }
 
+/*
+ * The left ribbon's top corner is painted in the title bar colour so it blends
+ * with the tab bar beside it. With the tab bar gone (left sidebar collapsed),
+ * paint it like the rest of the ribbon instead so it doesn't show as a square.
+ */
+.workspace:not(.is-left-sidedock-open) .workspace-ribbon.mod-left::before {
+	background-color: inherit;
+	border-bottom-color: transparent;
+}
+
 /* Make room in the view header for traffic lights / window controls / toggles */
 .workspace-split.mod-root .workspace-tabs .workspace-leaf-content > .view-header,
 .is-popout-window .workspace-tabs .workspace-leaf-content > .view-header {
